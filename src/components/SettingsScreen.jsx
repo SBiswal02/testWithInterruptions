@@ -100,11 +100,11 @@ export default function SettingsScreen({ settings, onSettingsChange, onBack, onS
           </label>
         )}
 
-        <div className="actions">
-          <button type="button" onClick={onBack}>
+        <div className="actions" style={{ width: "100%", display: "flex", justifyContent: "space-between" }}>
+          <button type="button" onClick={onBack} style={{ flex: 1 }}>
             Back
           </button>
-          <button type="submit" className="primary">
+          <button type="submit" className="primary" style={{ flex: 1, marginLeft: "1rem" }}>
             Start Test
           </button>
         </div>

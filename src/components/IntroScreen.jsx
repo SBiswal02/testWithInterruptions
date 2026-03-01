@@ -24,7 +24,7 @@ export default function IntroScreen({ participant, introError, onParticipantChan
         </label>
         {introError ? <p className="form-error">{introError}</p> : null}
         <button type="submit" className="primary">
-          Continue to Test Settings
+          Let's Start
         </button>
       </form>
     </section>

@@ -1,7 +1,21 @@
+import { useEffect } from "react";
+
 export default function DistractionPopup({ visible, text, onClose }) {
   if (!visible) {
     return null;
   }
+
+  useEffect(() => {
+    if (!visible) {
+      return undefined;
+    }
+
+    const timeoutId = setTimeout(() => {
+      onClose();
+    }, 5000);
+
+    return () => clearTimeout(timeoutId);
+  }, [visible, onClose]);
 
   return (
     <div

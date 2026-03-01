@@ -1,6 +1,6 @@
 /**
  * Main application container controlling the full N-back flow:
- * intro -> settings -> countdown -> test -> results.
+ * intro -> rules -> settings -> countdown -> test -> results.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import CountdownScreen from "./components/CountdownScreen";
@@ -8,10 +8,12 @@ import IntroScreen from "./components/IntroScreen";
 import ResultsScreen from "./components/ResultsScreen";
 import SettingsScreen from "./components/SettingsScreen";
 import TestScreen from "./components/TestScreen";
+import RulesScreen from "./components/RulesScreen";
 import { calculateResults, generateSequence } from "./utils/nback";
 
 const PHASES = {
   INTRO: "intro",
+  RULES: "rules",
   SETTINGS: "settings",
   COUNTDOWN: "countdown",
   TEST: "test",
@@ -43,6 +45,7 @@ const DEFAULT_SETTINGS = {
 
 export default function App() {
   const [phase, setPhase] = useState(PHASES.INTRO);
+  const [previousPhase, setPreviousPhase] = useState(PHASES.INTRO);
 
   const [participant, setParticipant] = useState(DEFAULT_PARTICIPANT);
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
@@ -504,7 +507,7 @@ export default function App() {
       return;
     }
     setIntroError("");
-    setPhase(PHASES.SETTINGS);
+    setPhase(PHASES.RULES);
   };
 
   return (
@@ -523,6 +526,16 @@ export default function App() {
         />
       )}
 
+      {phase === PHASES.RULES && (
+        <RulesScreen
+          onBack={() => setPhase(PHASES.INTRO)}
+          onContinue={() => {
+            setPreviousPhase(PHASES.RULES);
+            setPhase(PHASES.SETTINGS);
+          }}
+        />
+      )}
+
       {phase === PHASES.SETTINGS && (
         <SettingsScreen
           settings={settings}
@@ -532,7 +545,7 @@ export default function App() {
               [field]: value,
             }))
           }
-          onBack={() => setPhase(PHASES.INTRO)}
+          onBack={() => setPhase(previousPhase)}
           onStart={() => beginTest(settings)}
         />
       )}
@@ -569,6 +582,7 @@ export default function App() {
           }}
           onRunAnother={() => {
             setResults(null);
+            setPreviousPhase(PHASES.RESULTS);
             setPhase(PHASES.SETTINGS);
           }}
         />

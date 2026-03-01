@@ -52,11 +52,11 @@ export default function TestScreen({
         />
       </div>
 
-      <div className="actions">
-        <button className="primary" onClick={onMatch} disabled={!isResponseEnabled}>
+      <div className="actions" style={{ width: "100%", display: "flex", justifyContent: "space-between" }}>
+        <button className="primary" onClick={onMatch} disabled={!isResponseEnabled} style={{ flex: 1 }}>
           Match (Space)
         </button>
-        <button onClick={onNoMatch} disabled={!isResponseEnabled}>
+        <button onClick={onNoMatch} disabled={!isResponseEnabled} style={{ flex: 1, marginLeft: "1rem" }} >
           No Match (Enter)
         </button>
       </div>

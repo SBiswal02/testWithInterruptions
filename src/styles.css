@@ -148,9 +148,12 @@ button.primary {
 }
 
 .feedback {
-  min-height: 24px;
+  min-height: 30px;
   margin: 0;
+  padding: 1em 0;
   font-weight: 600;
+  text-align: center;
+  font-size: 125%;
 }
 
 .feedback.correct {

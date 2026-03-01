@@ -25,3 +25,10 @@
 5. More prettier design for results page
 6. additional background info but how
 7. trial round before actual test
+
+
+//Todo \
+1. add rules to the first page - done
+2. colors for popups and background
+3. audio notification for distractions
+4. notifications that don't need to be closed
