@@ -20,11 +20,19 @@ export default function TestScreen({
 }) {
   return (
     <section className="card screen test-screen">
-      <h2>Actual Test</h2>
-      <div className="test-meta">
-        <span>{trialCounterLabel}</span>
-        <span>N-Back: {nValue}</span>
+      <h2>Test Task</h2>
+      <div className="test-header">
+        <div className="test-meta">
+          <span>{trialCounterLabel}</span>
+          <span>N-Back: {nValue}</span>
+        </div>
+        <div className="test-controls">
+          <button type="button" className="secondary" onClick={onEndTest}>
+            End Test
+          </button>
+        </div>
       </div>
+
       <div className="trial-progress" aria-label="Time until next trial">
         <div
           className="trial-progress-fill"
@@ -62,21 +70,10 @@ export default function TestScreen({
         </button>
       </div>
 
-      <div
-        className="actions"
-        style={{
-          width: "100%",
-          marginTop: "0.75rem",
-          display: "flex",
-          justifyContent: "flex-end",
-        }}
-      >
-        <button type="button" className="secondary" onClick={onEndTest}>
-          End Test &amp; View Results
-        </button>
+      <div>
+        <p className={`feedback ${feedback.kind}`}>{feedback.text}</p>
       </div>
 
-      <p className={`feedback ${feedback.kind}`}>{feedback.text}</p>
     </section>
   );
 }

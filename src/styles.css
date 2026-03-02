@@ -20,7 +20,7 @@ body {
   display: grid;
   place-items: center;
   padding: 24px;
-  background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+  background: linear-gradient(135deg, #f8fafc, #1b4274);
 }
 
 .card {
@@ -84,16 +84,46 @@ button.primary {
 .actions {
   display: flex;
   flex-wrap: wrap;
+  justify-content: flex-end;
   gap: 12px;
   margin-top: 4px;
+  margin-right: 16px;
+}
+
+.test-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding-left: 10px;
+  padding-top: 0px;
+}
+
+.secondary {
+  color: #991b1b;
+  border-color: #991b1b;
+  border-width: 2px;
+  background-color: transparent;
+  padding-left: 24px;
+  padding-right: 24px;
 }
 
 .test-meta {
   display: flex;
   justify-content: space-between;
-  gap: 12px;
+  gap: 1em;
   color: #334155;
+  padding: 5px 15px 5px 0px;
 }
+
+.test-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+
 
 .trial-progress {
   width: 100%;
@@ -158,10 +188,12 @@ button.primary {
 
 .feedback.correct {
   color: #166534;
+  background-color: #e1faea;
 }
 
 .feedback.incorrect {
   color: #991b1b;
+  background-color: #fde2e4;
 }
 
 .results-grid {
@@ -270,6 +302,19 @@ button:disabled {
 .intro-screen .form-grid,
 .settings-screen .form-grid {
   margin-top: 2px;
+  padding: 0.5rem;
+}
+
+.intro-screen .form-grid label {
+  font-size: 1vw;
+  padding-bottom: 0.5em;
+  /* margin-top: 0.5em; */
+}
+
+.intro-screen .form-grid input {
+  font-size: 1vw;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 .test-screen .actions {

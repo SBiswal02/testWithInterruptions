@@ -4,28 +4,30 @@
 export default function IntroScreen({ participant, introError, onParticipantChange, onContinue }) {
   return (
     <section className="card screen intro-screen">
-      <h1>Calm Technology N-Back Experiment</h1>
-
+      <h1 style={{ textAlign: "center" }}>N-Back Test</h1>
       <form className="form-grid" onSubmit={onContinue}>
         <label>
           Name
           <input
             required
             value={participant.name}
-            placeholder="Enter Your Name"
+            placeholder="Please Enter Your Name"
             onChange={(event) => onParticipantChange("name", event.target.value)}
           />
         </label>
         <label>
-          Roll Number
+          ID Number
           <input
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
             value={participant.rollNumber}
-            placeholder="Enter Your Roll Number"
-            onChange={(event) => onParticipantChange("rollNumber", event.target.value)}
+            placeholder="Please enter ID: Only numbers are allowed"
+            onChange={(event) => onParticipantChange("rollNumber", event.target.value.replace(/\D/g, ""))}
           />
         </label>
         {introError ? <p className="form-error">{introError}</p> : null}
-        <button type="submit" className="primary">
+        <button type="submit" className="primary" style={{ fontSize: "1.1vw" }}>
           Let's Start
         </button>
       </form>
