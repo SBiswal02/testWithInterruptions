@@ -13,6 +13,7 @@ export default function TestScreen({
   isResponseEnabled,
   onMatch,
   onNoMatch,
+  onEndTest,
   feedback,
   distraction,
   onCloseDistraction,
@@ -58,6 +59,20 @@ export default function TestScreen({
         </button>
         <button onClick={onNoMatch} disabled={!isResponseEnabled} style={{ flex: 1, marginLeft: "1rem" }} >
           No Match (Enter)
+        </button>
+      </div>
+
+      <div
+        className="actions"
+        style={{
+          width: "100%",
+          marginTop: "0.75rem",
+          display: "flex",
+          justifyContent: "flex-end",
+        }}
+      >
+        <button type="button" className="secondary" onClick={onEndTest}>
+          End Test &amp; View Results
         </button>
       </div>
 

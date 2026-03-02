@@ -12,6 +12,7 @@ export default function IntroScreen({ participant, introError, onParticipantChan
           <input
             required
             value={participant.name}
+            placeholder="Enter Your Name"
             onChange={(event) => onParticipantChange("name", event.target.value)}
           />
         </label>
@@ -19,6 +20,7 @@ export default function IntroScreen({ participant, introError, onParticipantChan
           Roll Number
           <input
             value={participant.rollNumber}
+            placeholder="Enter Your Roll Number"
             onChange={(event) => onParticipantChange("rollNumber", event.target.value)}
           />
         </label>

@@ -231,12 +231,17 @@ export default function App() {
   const finishTest = useCallback(
     (allResponses) => {
       clearTimers();
-      const finalResults = calculateResults(allResponses, settings.nValue);
-      setResults(finalResults);
+      const baseResults = calculateResults(allResponses, settings.nValue);
+      const enrichedResults = {
+        ...baseResults,
+        completedTrials: allResponses.length,
+        totalTrials: settings.numTrials,
+      };
+      setResults(enrichedResults);
       setPhase(PHASES.RESULTS);
-      submitResults(finalResults);
+      submitResults(enrichedResults);
     },
-    [clearTimers, settings.nValue, submitResults]
+    [clearTimers, settings.nValue, settings.numTrials, submitResults]
   );
 
   const handleResponse = useCallback(
@@ -563,6 +568,7 @@ export default function App() {
           isResponseEnabled={isResponseEnabled}
           onMatch={() => handleResponse(true)}
           onNoMatch={() => handleResponse(false)}
+          onEndTest={() => finishTest(responses)}
           feedback={feedback}
           distraction={distraction}
           onCloseDistraction={handleDistractionClose}

@@ -11,6 +11,14 @@ export default function ResultsScreen({ participantName, results, saveStatus, on
 
       <div className="results-grid">
         <MetricCard label="Accuracy" value={`${results?.accuracy ?? 0}%`} />
+        <MetricCard
+          label="Trials Completed"
+          value={
+            results?.totalTrials
+              ? `${results.completedTrials ?? 0} / ${results.totalTrials}`
+              : `${results?.completedTrials ?? 0}`
+          }
+        />
         <MetricCard label="Hits" value={results?.hits ?? 0} />
         <MetricCard label="Misses" value={results?.misses ?? 0} />
         <MetricCard label="False Alarms" value={results?.falseAlarms ?? 0} />
