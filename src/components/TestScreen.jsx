@@ -53,13 +53,13 @@ export default function TestScreen({
         ) : (
           <div className="stimulus-token">{currentStimulus}</div>
         )}
-
-        <DistractionPopup
-          visible={distraction?.visible}
-          text={distraction?.text}
-          onClose={onCloseDistraction}
-        />
       </div>
+
+      <DistractionPopup
+        visible={distraction?.visible}
+        text={distraction?.text}
+        onClose={onCloseDistraction}
+      />
 
       <div className="actions" style={{ width: "100%", display: "flex", justifyContent: "space-between" }}>
         <button className="primary" onClick={onMatch} disabled={!isResponseEnabled} style={{ flex: 1 }}>

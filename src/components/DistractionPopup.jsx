@@ -12,7 +12,7 @@ export default function DistractionPopup({ visible, text, onClose }) {
 
     const timeoutId = setTimeout(() => {
       onClose();
-    }, 5000);
+    }, 6000);
 
     return () => clearTimeout(timeoutId);
   }, [visible, onClose]);
@@ -31,7 +31,9 @@ export default function DistractionPopup({ visible, text, onClose }) {
         aria-label="Close distraction"
         style={{ position: "absolute", top: "8px", right: "8px" }}
       >
-        X
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M18 6L6 18M6 6l12 12" />
+        </svg>
       </button>
       <p>{text}</p>
     </div>

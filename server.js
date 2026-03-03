@@ -19,6 +19,43 @@ const CSV_HEADERS = [
   "rollNumber",
   "nValue",
   "numTrials",
+  "numTrialsCompleted",
+  "stimulusType",
+  "stimulusDuration",
+  "accuracy",
+  "hits",
+  "misses",
+  "falseAlarms",
+  "correctRejections",
+  "reactionTime",
+  "correctHitOrRejectionReactionTime",
+  "distractionPopupCount",
+];
+
+const PREVIOUS_CSV_HEADERS = [
+  "timestamp",
+  "name",
+  "rollNumber",
+  "nValue",
+  "numTrials",
+  "numTrialsCompleted",
+  "stimulusType",
+  "stimulusDuration",
+  "accuracy",
+  "hits",
+  "misses",
+  "falseAlarms",
+  "correctRejections",
+  "reactionTime",
+  "correctHitOrRejectionReactionTime",
+];
+
+const LEGACY_CSV_HEADERS = [
+  "timestamp",
+  "name",
+  "rollNumber",
+  "nValue",
+  "numTrials",
   "stimulusType",
   "stimulusDuration",
   "accuracy",
@@ -121,6 +158,20 @@ function normalizeRunRecord(rawRecord, fallbackTimestamp, sourceFile) {
   const settings = rawRecord?.settings || {};
   const results = rawRecord?.results || {};
 
+  const reactionTime =
+    results?.reactionTime ??
+    results?.avgReactionTime ??
+    results?.averageReactionTime ??
+    results?.meanReactionTime ??
+    "";
+
+  const numTrialsCompleted =
+    results?.numTrialsCompleted ??
+    results?.completedTrials ??
+    results?.totalTrials ??
+    settings?.numTrials ??
+    "";
+
   return {
     timestamp,
     participant: {
@@ -139,8 +190,14 @@ function normalizeRunRecord(rawRecord, fallbackTimestamp, sourceFile) {
       misses: results?.misses ?? "",
       falseAlarms: results?.falseAlarms ?? "",
       correctRejections: results?.correctRejections ?? "",
-      avgReactionTime: results?.avgReactionTime ?? "",
+      reactionTime,
+      numTrialsCompleted,
       avgCorrectHitOrRejectionReactionTime: normalizeCorrectHitOrRejectionReactionTime(results),
+      distractionPopupCount:
+        results?.distractionPopupCount ??
+        results?.distractionPopups ??
+        results?.distractionCount ??
+        "",
     },
     __sourceFile: sourceFile || "",
   };
@@ -179,6 +236,7 @@ function buildCsvRow(runRecord) {
     participant?.rollNumber,
     settings?.nValue,
     settings?.numTrials,
+    results?.numTrialsCompleted,
     settings?.stimulusType,
     settings?.stimulusDuration,
     results?.accuracy,
@@ -186,11 +244,95 @@ function buildCsvRow(runRecord) {
     results?.misses,
     results?.falseAlarms,
     results?.correctRejections,
-    results?.avgReactionTime,
+    results?.reactionTime,
     results?.avgCorrectHitOrRejectionReactionTime,
+    results?.distractionPopupCount,
   ]
     .map(escapeCsv)
     .join(",");
+}
+
+function headerMatches(expected, actual) {
+  return actual.length === expected.length && expected.every((value, idx) => actual[idx] === value);
+}
+
+/**
+ * Migrates older CSV schemas to the current one (adds numTrialsCompleted and/or distractionPopupCount).
+ * This preserves rows even when a JSON run record doesn't exist.
+ */
+function migrateLegacyCsvIfNeeded() {
+  if (!fs.existsSync(resultsFile)) {
+    return;
+  }
+
+  const raw = fs.readFileSync(resultsFile, "utf8");
+  if (!raw.trim()) {
+    fs.writeFileSync(resultsFile, `${CSV_HEADERS.join(",")}\n`, "utf8");
+    return;
+  }
+
+  const lines = raw.replace(/\r\n/g, "\n").split("\n").filter((line) => line.length > 0);
+  if (lines.length === 0) {
+    fs.writeFileSync(resultsFile, `${CSV_HEADERS.join(",")}\n`, "utf8");
+    return;
+  }
+
+  const header = parseCsvLine(lines[0]);
+  if (headerMatches(CSV_HEADERS, header)) {
+    return;
+  }
+
+  if (headerMatches(PREVIOUS_CSV_HEADERS, header)) {
+    const outputLines = [CSV_HEADERS.join(",")];
+    for (let i = 1; i < lines.length; i += 1) {
+      const fields = parseCsvLine(lines[i]);
+      if (fields.length !== PREVIOUS_CSV_HEADERS.length) {
+        continue;
+      }
+      outputLines.push([...fields, ""].map(escapeCsv).join(","));
+    }
+    fs.writeFileSync(resultsFile, `${outputLines.join("\n")}\n`, "utf8");
+    return;
+  }
+
+  if (!headerMatches(LEGACY_CSV_HEADERS, header)) {
+    // Unknown schema; do not attempt in-place migration.
+    return;
+  }
+
+  const outputLines = [CSV_HEADERS.join(",")];
+  for (let i = 1; i < lines.length; i += 1) {
+    const fields = parseCsvLine(lines[i]);
+    if (fields.length !== LEGACY_CSV_HEADERS.length) {
+      continue;
+    }
+
+    const row = Object.fromEntries(LEGACY_CSV_HEADERS.map((key, idx) => [key, fields[idx]]));
+    const migrated = [
+      row.timestamp,
+      row.name,
+      row.rollNumber,
+      row.nValue,
+      row.numTrials,
+      row.numTrials, // legacy runs did not store it; assume all scheduled trials were attempted
+      row.stimulusType,
+      row.stimulusDuration,
+      row.accuracy,
+      row.hits,
+      row.misses,
+      row.falseAlarms,
+      row.correctRejections,
+      row.reactionTime,
+      row.correctHitOrRejectionReactionTime,
+      "",
+    ]
+      .map(escapeCsv)
+      .join(",");
+
+    outputLines.push(migrated);
+  }
+
+  fs.writeFileSync(resultsFile, `${outputLines.join("\n")}\n`, "utf8");
 }
 
 /**
@@ -244,7 +386,7 @@ function csvHasAmbiguity(recordsFromJson) {
   }
 
   const header = parseCsvLine(lines[0]);
-  if (header.length !== CSV_HEADERS.length || header.some((value, idx) => value !== CSV_HEADERS[idx])) {
+  if (!headerMatches(CSV_HEADERS, header)) {
     return true;
   }
 
@@ -335,6 +477,7 @@ app.post("/api/results", (req, res) => {
 
 try {
   ensureStorage();
+  migrateLegacyCsvIfNeeded();
   sanitizeCsvIfAmbiguous();
 } catch (error) {
   // eslint-disable-next-line no-console

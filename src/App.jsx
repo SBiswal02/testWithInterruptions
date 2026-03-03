@@ -62,6 +62,7 @@ export default function App() {
   const [introError, setIntroError] = useState("");
   const [countdownValue, setCountdownValue] = useState(3);
   const [distraction, setDistraction] = useState({ visible: true, text: "" });
+  const [distractionPopupCount, setDistractionPopupCount] = useState(0);
   const trialStartTimeRef = useRef(0);
   const trialLockedRef = useRef(false);
   const responseTimerRef = useRef(null);
@@ -70,6 +71,7 @@ export default function App() {
   const pendingFeedbackRef = useRef({ text: "", kind: "" });
   const feedbackDelayTimerRef = useRef(null);
   const distractionTimerRef = useRef(null);
+  const distractionPopupCountRef = useRef(0);
   const elapsedBeforePauseRef = useRef(0);
   const trialPausedRef = useRef(false);
   const remainingResponseMsRef = useRef(0);
@@ -173,6 +175,8 @@ export default function App() {
     setResults(null);
     setSaveStatus("idle");
     setCountdownValue(3);
+    distractionPopupCountRef.current = 0;
+    setDistractionPopupCount(0);
     if (distractionTimerRef.current) {
       clearTimeout(distractionTimerRef.current);
       distractionTimerRef.current = null;
@@ -236,6 +240,7 @@ export default function App() {
         ...baseResults,
         completedTrials: allResponses.length,
         totalTrials: settings.numTrials,
+        distractionPopupCount: distractionPopupCountRef.current,
       };
       setResults(enrichedResults);
       setPhase(PHASES.RESULTS);
@@ -418,6 +423,8 @@ export default function App() {
         }
 
         const text = DISTRACTION_MESSAGES[Math.floor(Math.random() * DISTRACTION_MESSAGES.length)];
+        distractionPopupCountRef.current += 1;
+        setDistractionPopupCount(distractionPopupCountRef.current);
         setDistraction({
           visible: true,
           text,
