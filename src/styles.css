@@ -37,16 +37,22 @@ body {
   gap: 18px;
 }
 
+
 h1,
 h2 {
   margin: 0;
   line-height: 1.2;
+  font-size: 1.5vw;
+}
+h3 {
+  font-size: 1.2vw;
 }
 
 .subtitle {
   margin: 0;
-  color: #334155;
+  color: #476590;
   line-height: 1.5;
+  /* font-size: 1vw; */
 }
 
 .form-grid {
@@ -73,6 +79,7 @@ button {
 button {
   cursor: pointer;
   background: #f8fafc;
+  font-size: min(max(0.9vw, 13px), 18px);
 }
 
 button.primary {
@@ -81,6 +88,39 @@ button.primary {
   border-color: #1d4ed8;
 }
 
+.rules-screen{
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+.rules-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0rem;
+  line-height: 1.4;
+}
+
+.rules-screen .rules-list {
+  margin: 0.5rem 0 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.rules-screen .rules-list li {
+  padding-bottom: 0.25rem;
+}
+
+.rules-screen .rules-body h3 {
+  margin: 1% 0;
+}
+
+.rules-screen .rules-body h3 + p {
+  margin-top: 0;
+}
+
+.rules-screen .rules-body p + .rules-list {
+  margin-top: 0px;
+}
+
+
 .actions {
   display: flex;
   flex-wrap: wrap;
@@ -88,6 +128,7 @@ button.primary {
   gap: 12px;
   margin-top: 4px;
   margin-right: 16px;
+  line-height: 1.5;
 }
 
 .test-header {
@@ -122,8 +163,6 @@ button.primary {
   justify-content: flex-end;
   margin-top: 4px;
 }
-
-
 
 .trial-progress {
   width: 100%;
@@ -177,6 +216,10 @@ button.primary {
   border-color: #1d4ed8;
 }
 
+.test-screen .feedback-wrap {
+  min-height: 60px;
+}
+
 .feedback {
   min-height: 30px;
   margin: 0;
@@ -184,6 +227,7 @@ button.primary {
   font-weight: 600;
   text-align: center;
   font-size: 125%;
+  border-radius: 12px;
 }
 
 .feedback.correct {
@@ -308,7 +352,6 @@ button:disabled {
 .intro-screen .form-grid label {
   font-size: 1vw;
   padding-bottom: 0.5em;
-  /* margin-top: 0.5em; */
 }
 
 .intro-screen .form-grid input {

@@ -70,7 +70,7 @@ export default function TestScreen({
         </button>
       </div>
 
-      <div>
+      <div  className="feedback-wrap">
         <p className={`feedback ${feedback.kind}`}>{feedback.text}</p>
       </div>
 
