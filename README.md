@@ -1,6 +1,10 @@
 # Calm Technology N-Back (React + Node)
 
-A linear-flow N-back experiment web app built with React (frontend) and Express (local backend).
+A linear-flow N-back experiment web app built with React (frontend) and Express (local backend) for running participants through a fixed sequence and persisting results locally (JSON + CSV).
+
+## Prerequisites
+
+- Node.js + npm (recommended: an active LTS release)
 
 ## What This Project Does
 
@@ -12,10 +16,12 @@ The app runs participants through a fixed sequence:
 4. Actual Test
 5. Results
 
-The frontend displays test performance immediately, while the backend stores each run locally in:
+The frontend displays test performance immediately, while the backend stores each run locally.
 
-- `data/runs/<name>_<hh-mm-ss>_<yyyy-mm-dd>.json`
-- `data/results.csv`
+## Data Output (Local)
+
+- **Per-run JSON (source of truth)**: `data/runs/<name>_<hh-mm-ss>_<yyyy-mm-dd>.json`
+- **Append-only summary CSV**: `data/results.csv`
 
 ## Core Features
 
@@ -27,12 +33,15 @@ The frontend displays test performance immediately, while the backend stores eac
   - Stimulus type (letters / numbers / positions)
   - Stimulus duration (1000-4000 ms)
   - Optional distractions + configurable distraction probability
-- Keyboard controls during test:
-  - `Space`: Match
-  - `Enter`: No Match
-  - `Esc`: Close distraction popup
+- Keyboard controls during test
 - Progress bar for time until next trial
 - Delayed feedback display (status appears in next trial with a short transition gap)
+
+## Keyboard Controls
+
+- **Match**: `Space`
+- **No Match**: `Enter`
+- **Close distraction popup**: `Esc`
 
 ## Scoring and Metrics
 
@@ -89,6 +98,12 @@ npm run build
 npm run preview
 ```
 
+## Common Scripts
+
+- **Dev (frontend + backend)**: `npm run dev`
+- **Build**: `npm run build`
+- **Preview build**: `npm run preview`
+
 ## Project Structure
 
 - `src/App.jsx`: main flow and test orchestration
@@ -99,7 +114,7 @@ npm run preview
 
 ## Notes
 
-- This project stores participant outputs locally by design.
+- **Local storage by design**: runs are written under `data/`. Plan your data handling accordingly (e.g., consent, retention, and access controls) if used in a study setting.
 
 ## Clean
 
